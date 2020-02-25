@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/lista_sugestao_usuario.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div>
+        <div class="container">
+            <h1 class="titulo">Lista de Sugestoes</h1>
+            <span id="resultado"></span>
+            <table class="table table-striped table-bordered">
+                <thead class="thead light">
+                    <tr>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">Sugestão</th>
+                    </tr>
+                </thead>
+                <tbody id="lista_sugestao"></tbody>
+            </table>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/lista_sugestao_usuario.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+
+            $( document ).ready(function() {
+                chamaListaSugestao(lista_sugestao);
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 1) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+        </script>
+    </body>
+</html>

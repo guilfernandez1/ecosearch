@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/lista_sugestao.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div>
+        <div class="container">
+            <h1 class="titulo">Lista de Sugestões</h1>
+            <span id="resultado"></span>
+            <table class="table table-striped table-bordered">
+                <thead class="thead light">
+                    <tr>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">Sugestão</th>
+                        <th scope="col">Nome do Usuario</th>
+                    </tr>
+                </thead>
+                <tbody id="lista_sugestao"></tbody>
+            </table>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/lista_sugestao.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+            $( document ).ready(function() {
+                chamaListaSugestao(lista_sugestao);
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 0) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+            function remove_sugestao_lista(_id) {
+                $.ajax ({
+                    type: "POST",
+                    url: "php/remove_sugestao.php",
+                    data: {id: _id},
+                    beforeSend: function(){
+                        $("#resultado").html("Realizando remoção...");
+                    }
+                })
+                .done(function(msg){
+                     $("#resultado").html(msg);
+                     chamaListaSugestao(lista_sugestao);
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+            }
+        </script>
+    </body>
+</html>

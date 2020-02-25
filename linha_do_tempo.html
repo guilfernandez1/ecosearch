@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/imports_padrao.css">
+    <link rel="stylesheet" href="css/linha_do_tempo.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>EcoSearch</title>
+  </head>
+
+  <body>
+    <div id="navbar"></div>
+
+    <!--FILTRO DE DESASTRES-->
+
+    <div id="lista_filtra_desastres">
+      <label for="pais" class="label_filtros">Pais</label>
+        <div class="combobox_filtro">
+          <select class="custom-select my-1 mr-sm-2" id="countryId" name="pais">
+            <option selected>Carregando...</option>
+          </select>
+        </div>
+
+      <label for="evento" class="label_filtros">Eventos</label>
+        <div class="combobox_filtro">
+          <select class="custom-select my-1 mr-sm-2" id="eventoId" name="evento">
+            <option selected>Carregando...</option>
+          </select>
+        </div>
+    </div>
+
+    <!--LINHA DO TEMPO-->
+
+    <section id="cd-timeline" class="cd-container">
+      <div id="timeline"></div>
+
+      <div id="formulario_sugestao">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Alteração de Evento</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+                  <div class="modal-body">
+                    <span id="resultado"></span>
+                      Informe para nós alguma alteração que deve ser feita no card selecionado! 
+                      <form action="php/envia_sugestao.php" method="POST" id="formulario_cadastra_sugestao">
+                          <input type="hidden" id="idEvento" name ="idEvento" value="">
+                          <input type="hidden" id="loginUser" name ="loginUser" value="">
+                          <textarea name="descricao" id="descricao" cols="30" rows="3" class="form-control" placeholder="Informe as alterações" required></textarea>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                              <button type="submit" class="btn btn-primary">Enviar</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </section>
+
+    <!--JAVASCRIPT-->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/linha_do_tempo.js"></script>
+    <script>
+      $( "#navbar" ).load( "php/navbar.php" );
+
+      $( document ).ready(function() {
+        chamaLinhaDoTempo(timeline, exibir);
+        listaEventos(eventoId);
+        listaPaises(countryId);
+
+        $(window).scroll(function()
+        {
+            exibir();
+        });
+      });
+
+      $("#countryId").change(function(){
+        var pais = $(this).val();
+        var evento = $("#eventoId").val();
+        chamaLinhaDoTempoPais(timeline, pais, evento, exibir);
+      });
+
+      $("#eventoId").change(function(){
+        var evento = $(this).val();
+        var pais = $("#countryId").val();
+        chamaLinhaDoTempoPais(timeline, pais, evento, exibir);
+      });
+
+      function exibir()
+      {
+          $(".cd-timeline-block").each(function(index)
+          {
+              var bottom_of_object = $(this).position().top + $(this).outerHeight();
+              var bottom_of_window = $(window).scrollTop() + $(window).height();
+
+              if(bottom_of_object < bottom_of_window)
+              {
+                  $(this).animate({'opacity':'1'},500);
+              }
+          });
+      }
+
+      function pegaValoresModal(_id, _loginUser) {
+        $("#idEvento").val(_id);
+        $("#loginUser").val(_loginUser);
+      }
+
+      formulario_cadastra_sugestao.onsubmit=function() {
+        $.ajax ({
+          type: this.method,
+          url: this.action,
+          data: $(this).serialize()
+        })
+        .done(function(msg){
+          $("#resultado").html(msg);
+          $("#formulario_cadastra_sugestao").each(function(){
+            this.reset();
+          })
+        })
+        .fail(function(jqXHR, textStatus, msg){
+            alert(msg);
+        });
+          return false;
+        };
+    </script>
+  </body>
+</html>

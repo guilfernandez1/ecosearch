@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/formulario_categoria.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div> 
+        <div class="container">
+            <h1 class="titulo">Cadastro de categoria</h1>
+            <span id="resultado"></span>
+            <form action="php/adiciona_evento.php" method="POST" id="formulario_evento">
+                <div class="formulario_categoria">
+                    <label for="evento">Categoria</label>
+                    <input type="text" name="evento" id="evento"  class="form-control" required>
+                    <button type="submit" class="btn btn-warning" id="botao-cadastrar">Cadastrar</button>
+                </div>
+            </form>    
+        </div>
+        <script src="js/jquery.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+
+            $( document ).ready(function() {
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 0 || callback == 1) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+
+            formulario_evento.onsubmit=function() {
+                $.ajax ({
+                    type: this.method,
+                    url: this.action,
+                    data: $(this).serialize(),
+                    beforeSend: function(){
+                        $("#resultado").html("Cadastrando categoria...");
+                    }
+                })
+                .done(function(msg){
+                     $("#resultado").html(msg);
+                     $("#formulario_evento").each(function(){
+                        this.reset();
+                     })
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+                return false;
+            };
+        </script>
+    </body>
+</html>

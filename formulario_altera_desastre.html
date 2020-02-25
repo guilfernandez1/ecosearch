@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/formulario_cadastro.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div>
+        
+        <div class="container">
+            <h1 class="titulo">Alteração de Evento</h1>
+            <span id="resultado"></span>
+            
+            <form action="php/altera_desastre.php" method="POST" id="formulario_altera_desastre">
+                <div class="formulario_desastre">
+                    <input type="hidden" name="id" value="" id="id">
+                    <div id="retorno_altera_desastre"></div>  
+                </div>
+            </form> 
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/formulario_altera_desastre.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+            var url=  document.URL
+            var idUrl = url.substring(url.lastIndexOf('=') + 1);
+            $("#id").val(idUrl);
+            $( document ).ready(function() {
+                chamaFormularioAlteraDesastre(retorno_altera_desastre, idUrl);
+
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 0) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+            formulario_altera_desastre.onsubmit=function() {
+                $.ajax ({
+                    type: this.method,
+                    url: this.action,
+                    data: $(this).serialize(),
+                    beforeSend: function(){
+                        $("#resultado").html("Realizando alteração...");
+                    }
+                })
+                .done(function(msg){
+                     $("#resultado").html(msg);
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+                return false;
+            };
+        </script>
+    </body>
+    
+</html>

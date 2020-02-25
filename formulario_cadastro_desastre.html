@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/formulario_cadastro.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div>   
+        <div class="container">
+            <h1 class="titulo">Cadastro de Evento</h1>
+            <span id="resultado"></span>
+            <form action="php/adiciona_desastre.php" method="POST" id="formulario_cadastra_desastre">
+                <div class="formulario_desastre">
+                    <div class="row">
+                        <div class="col">
+                            <label for="nome">Título</label>
+                            <input type="text" name="nome" id="nome"  class="form-control" placeholder="Insira o título do evento" required>
+                        </div>
+                        <div class="col">
+                            <label for="evento">Evento</label>
+                            <select class="custom-select my-1 mr-sm-2" id="eventoId" name="evento" required>
+                                <option selected>Carregando...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="pais">Pais</label>
+                            <select name="country" class="countries form-control" id="countryId" required>
+                                    <option value="">Select Country</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="estado">Estado</label>
+                            <select name="state" class="states form-control" id="stateId" required>
+                                    <option value="">Select State</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="cidade">Cidade</label>
+                            <select name="city" class="cities form-control" id="cityId" required>
+                                    <option value="">Select City</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="data">Data</label>
+                            <input type="date" name="data" id="data" class="form-control input_data" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="referencia">Link de Referência</label>
+                        <input type="text" name="referencia" id="referencia" class="form-control" placeholder="Coloque aqui o link de referência usado para elaborar o texto" required>
+                    </div>
+                    <div class="form-group">    
+                        <label for="descricao">Descrição</label>
+                        <textarea name="descricao" id="descricao" cols="30" rows="3" class="form-control" placeholder="Insira informações sobre o evento" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Cadastrar</button>
+                </div>
+            </form> 
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="//geodata.solutions/includes/countrystatecity.js"></script>
+        <script src="js/formulario_cadastra_desastre.js"></script>
+        <script>
+            $( document ).ready(function() {
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 0 || callback == 1) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+
+            $( "#navbar" ).load( "php/navbar.php" );
+
+            window.onload = chamaListaTiposEventos(eventoId);
+
+            formulario_cadastra_desastre.onsubmit=function() {
+                $.ajax ({
+                    type: this.method,
+                    url: this.action,
+                    data: $(this).serialize(),
+                    beforeSend: function(){
+                        $("#resultado").html("Cadastrando evento...");
+                    }
+                })
+                .done(function(msg){
+                     $("#resultado").html(msg);
+                     $("#formulario_cadastra_desastre").each(function(){
+                        this.reset();
+                     })
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+                return false;
+            };
+        </script>
+    </body>
+</html>

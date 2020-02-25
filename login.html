@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/login.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div class="form-cent">
+            <form action="php/validaLogin.php" method="post" id="form" name="form">
+                <div class="row">
+                    <div class="col">
+                        <label for="login">Usuário:
+                            <input type="text" class="form-control" name="login" id="login" placeholder="Login"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="senha">Senha: 
+                            <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha"/>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-warning">Entrar</button>
+                <a href="formulario_usuario.html">Quer se cadastrar?</a>
+            </form>
+        </div>
+    </body>
+</html>
+

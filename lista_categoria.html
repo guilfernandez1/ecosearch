@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/lista_categoria.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div>
+        <div class="container">
+            <h1 class="titulo">Lista de Categorias</h1>
+            <span id="resultado"></span>
+            <table class="table table-striped table-bordered">
+                <thead class="thead light">
+                    <tr>
+                        <th scope="col">Categoria</th>
+                    </tr>
+                </thead>
+                <tbody id="lista_categoria"></tbody>
+            </table>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/lista_categoria.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+            $( document ).ready(function() {
+               chamaListaEvento(lista_categoria);
+
+                $.ajax ({
+                    type: "GET",
+                    url: "php/validaEntrada.php"
+                })
+                .done(function(msg){
+                    var callback = msg;
+                    if(callback == 0) {
+                        $("body").css("visibility", "visible");
+                    } else {
+                        location.href = "login.html";
+                    }
+                })
+            });
+            function remove_evento_lista(_id) {
+                $.ajax ({
+                    type: "POST",
+                    url: "php/remove_evento.php",
+                    data: {id: _id},
+                    beforeSend: function(){
+                        $("#resultado").html("Realizando remoção...");
+                    }
+                })
+                .done(function(msg){
+                    $("#resultado").html(msg);
+                    chamaListaEvento(lista_categoria);
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+            }
+        </script>
+    </body>
+</html>

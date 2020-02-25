@@ -1,0 +1,7 @@
+body {
+    visibility: hidden;
+}
+
+.container {
+    width: 35% !important;
+}

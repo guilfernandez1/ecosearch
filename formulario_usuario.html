@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/imports_padrao.css">
+        <link rel="stylesheet" href="css/formulario_usuario.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>EcoSearch</title>
+    </head>
+
+    <body>
+        <div id="navbar"></div> 
+        <div class="container">
+            <h1 class="titulo">Cadastro de Usuário</h1>
+            <span id="resultado"></span>
+            <form action="php/adiciona_usuario.php" method="POST" id="formulario_cadastra_usuario">
+                <div class="formulario_usuario">
+                    <div class="row">
+                        <div class="col">
+                            <label for="nome">Nome</label>
+                            <input type="text" name="nome" id="nome"  class="form-control" placeholder="Digite seu nome" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="login">Login</label>
+                            <input type="text" name="login" id="login"  class="form-control" placeholder="Digite seu login" required>
+                        </div>
+                    </div>
+                    <div class="row">    
+                        <div class="col">
+                            <label for="senha">Senha</label>
+                            <input type="text" name="senha" id="senha" class="form-control" placeholder = "Digite sua senha" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-warning" id="botao-cadastrar">Cadastrar</button>
+                </div>
+            </form>    
+        </div>
+        <script src="js/jquery.js"></script>
+        <script>
+            $( "#navbar" ).load( "php/navbar.php" );
+
+            formulario_cadastra_usuario.onsubmit=function() {
+                $.ajax ({
+                    type: this.method,
+                    url: this.action,
+                    data: $(this).serialize(),
+                    beforeSend: function(){
+                        $("#resultado").html("Cadastrando usuario...");
+                    }
+                })
+                .done(function(msg){
+                     location.href = "login.html";
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+                return false;
+            };
+        </script>
+    </body>
+</html>
